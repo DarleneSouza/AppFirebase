@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ordemservico.db.ClienteDAO;
 import com.example.ordemservico.db.DAOObserver;
 import com.example.ordemservico.domain.Cliente;
+import com.google.firebase.FirebaseApp;
 
 public class FormCliente extends AppCompatActivity implements DAOObserver {
 
@@ -43,6 +44,8 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
     private static final String ENDERECO_KEY = "enderecoCliente";
     private static final String CPF_KEY = "cpfCliente";
     private static final String TIPO_KEY = "tipoCliente";
+
+
 
 
     @Override
@@ -189,7 +192,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
         String cpfStr = editTextCpf.getText().toString();
         String tipoStr = spinnerTipo.getSelectedItem().toString();
 
-        if(nomeStr.equals("") ||)
+
         ClienteDAO dao = new ClienteDAO(FormCliente.this);
             if(cliente == null) {
                 cliente = new Cliente (null, nomeStr, tipoStr, cpfStr, enderecoStr);

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ordemservico.domain.Cliente;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,6 +31,7 @@ public class ClienteDAO {
     private static final String DT_CHANGE = "date_changed";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
 
     public ClienteDAO(DAOObserver observer) {
