@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,12 @@ import com.example.ordemservico.db.DAOObserver;
 import com.example.ordemservico.domain.Cliente;
 import com.google.firebase.FirebaseApp;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class FormCliente extends AppCompatActivity implements DAOObserver {
 
     //Atributos
@@ -31,6 +39,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
     private EditText editTextNomeCliente;
     private EditText editTextEndereco;
     private EditText editTextCpf;
+    private EditText editTextCep;
     private Spinner spinnerTipo;
     private Button buttonGuardar;
     private Button buttonMostrar;
@@ -64,6 +73,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
         textViewInformacaoCliente = findViewById(R.id.textViewInformacaoCliente);
         textViewInformacaoCliente.setVisibility(TextView.INVISIBLE);
         buttonCompartilhar.setVisibility(Button.INVISIBLE);
+        editTextCep = findViewById(R.id.editTextCep);
 
         // recupoerar a intent chamadora
         Intent intent = getIntent();
@@ -125,9 +135,9 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
                 pessoa = preferences.getString(TIPO_KEY, "");
 
                 textViewInformacaoCliente.setText("Nome do cliente: " + nome + "\n" +
-                        "Serviço realizado: " + endereco + "\n" +
-                        "Produtos gastos: " + cpf + "\n" +
-                        "Status da OS: " + pessoa + "\n");
+                        "Enderço: " + endereco + "\n" +
+                        "CPF ou CNPJ: " + cpf + "\n" +
+                        "Tipo de Pessoa: " + pessoa + "\n");
 
                 textViewInformacaoCliente.setVisibility(TextView.VISIBLE);
                 buttonCompartilhar.setVisibility(Button.VISIBLE);
@@ -159,7 +169,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
 
                         String mensagem = "Cliente\n" +
                                 "Nome: " + nome + "\n" +
-                                "Serviço realizado: " + endereco + "\n" +
+                                "Endereço: " + endereco + "\n" +
                                 "CPF ou CNPJ: " + cpf + "\n" +
                                 "Tipo: " + pessoa + "\n";
 
@@ -174,6 +184,16 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+        editTextCep.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    searchCEP(editTextCep.getText().toString());
+                }
+
             }
         });
     }
@@ -215,6 +235,44 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
             }
         }
         return 0; // Valor padrão, caso o valor não seja encontrado
+    }
+
+    private void searchCEP(String cep) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://viacep.com.br/ws/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        CEPService cepService = retrofit.create(CEPService.class);
+        Call<CEPResponse> call = cepService.getCEP(cep);
+
+        call.enqueue(new Callback<CEPResponse>() {
+            @Override
+            public void onResponse(Call<CEPResponse> call, Response<CEPResponse> response) {
+                if (response.isSuccessful()) {
+                    CEPResponse cepResponse = response.body();
+                    if (cepResponse != null) {
+                        String result = "CEP: " + cepResponse.getCep() +
+                                "\nLogradouro: " + cepResponse.getLogradouro() +
+                                "\nBairro: " + cepResponse.getBairro() +
+                                "\nCidade: " + cepResponse.getLocalidade();
+
+                        // Outros campos que você queira exibir
+                        editTextEndereco.setText(cepResponse.getLocalidade());
+                    }
+                } else {
+                    showErrorMessage();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CEPResponse> call, Throwable t) {
+                showErrorMessage();
+            }
+        });
+    }
+    private void showErrorMessage() {
+        Toast.makeText(this, "Erro ao buscar o CEP", Toast.LENGTH_LONG).show();
     }
 }
 
