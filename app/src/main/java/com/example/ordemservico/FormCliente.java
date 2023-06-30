@@ -211,6 +211,20 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
         String enderecoStr = editTextEndereco.getText().toString();
         String cpfStr = editTextCpf.getText().toString();
         String tipoStr = spinnerTipo.getSelectedItem().toString();
+        if (nomeStr.equals((""))) {
+            Toast.makeText(getApplicationContext() , "Campo nome não pode ser vazio" , Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (enderecoStr.equals((""))) {
+            Toast.makeText(getApplicationContext() , "Campo endereço não pode ser vazio" , Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (cpfStr.equals((""))) {
+            Toast.makeText(getApplicationContext() , "Campo CPF ou CNPJ não pode ser vazio" , Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
 
         ClienteDAO dao = new ClienteDAO(FormCliente.this);

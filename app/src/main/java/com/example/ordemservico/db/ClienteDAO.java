@@ -96,7 +96,29 @@ public class ClienteDAO {
     }
 
     public List<Cliente> listAll () {
-        return null;
+        List<Cliente> clientes = new ArrayList<>();
+
+        db.collection(COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        String id = doc.getId();
+                        String nome = doc.getString(NOME);
+                        String tipo = doc.getString(TIPO);
+                        String cpf = doc.getString(CPF);
+                        String endereco = doc.getString(ENDERECO);
+
+                        Cliente cliente = new Cliente(id, nome, tipo, cpf, endereco);
+                        clientes.add(cliente);
+                    }
+
+                    observer.loadSuccess(clientes);
+                }
+            }
+        });
+
+        return clientes;
     }
 
 }

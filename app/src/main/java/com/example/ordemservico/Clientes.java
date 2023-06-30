@@ -51,6 +51,7 @@ public class Clientes extends AppCompatActivity implements DAOObserver {
 
             }
         });
+        loadClientes();
 
         registerForContextMenu(todoList);
     }
@@ -98,7 +99,7 @@ public class Clientes extends AppCompatActivity implements DAOObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        //loadClientes();
+        loadClientes();
     }
 
     private void updateTaskList() {
