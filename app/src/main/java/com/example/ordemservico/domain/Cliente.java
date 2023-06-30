@@ -9,13 +9,15 @@ public class Cliente implements Serializable {
     private String nome;
     private String tipo;
     private String cpf;
+    private String cep;
     private String endereco;
 
-    public Cliente(String id, String nome, String tipo, String cpf, String endereco) {
+    public Cliente(String id, String nome, String tipo, String cpf, String cep, String endereco) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.cpf = cpf;
+        this.cep = cep;
         this.endereco = endereco;
     }
 
@@ -51,6 +53,14 @@ public class Cliente implements Serializable {
         this.cpf = cpf;
     }
 
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
     public String getEndereco() {
         return endereco;
     }
@@ -61,7 +71,7 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        String formatted = String.format("%s - %s", this.getId(), this.getNome());
+        String formatted = String.format("%s", this.getNome());
         return formatted;
     }
 }

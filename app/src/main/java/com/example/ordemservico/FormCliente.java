@@ -53,6 +53,8 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
     private static final String ENDERECO_KEY = "enderecoCliente";
     private static final String CPF_KEY = "cpfCliente";
     private static final String TIPO_KEY = "tipoCliente";
+    private static final String CEP_KEY = "cepCliente";
+
 
 
 
@@ -84,6 +86,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
             editTextNomeCliente.setText(cliente.getNome());
             editTextEndereco.setText(cliente.getEndereco());
             editTextCpf.setText(cliente.getCpf());
+            editTextCep.setText(cliente.getCep());
             spinnerTipo.setSelection(getIndexByValue(spinnerTipo, cliente.getTipo()));
         }
 
@@ -96,6 +99,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
                 String nomeStr = editTextNomeCliente.getText().toString();
                 String enderecoStr = editTextEndereco.getText().toString();
                 String cpfStr = editTextCpf.getText().toString();
+                String cepStr = editTextCep.getText().toString();
 
                 if (nomeStr.equals((""))) {
                     Toast.makeText(getApplicationContext() , "Campo nome não pode ser vazio" , Toast.LENGTH_SHORT).show();
@@ -119,6 +123,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
                 editor.putString(NAME_KEY, editTextNomeCliente.getText().toString());
                 editor.putString(ENDERECO_KEY, editTextEndereco.getText().toString());
                 editor.putString(CPF_KEY, editTextCpf.getText().toString());
+                editor.putString(CEP_KEY, editTextCep.getText().toString());
                 editor.putString(TIPO_KEY, pessoa[spinnerTipo.getSelectedItemPosition()]);
                 editor.apply();
                 Toast.makeText(FormCliente.this, "Gravado com Sucesso", Toast.LENGTH_SHORT).show();
@@ -128,15 +133,17 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
         buttonMostrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nome, endereco, cpf, pessoa;
+                String nome, endereco, cpf, cep, pessoa;
                 nome = preferences.getString(NAME_KEY, "");
                 endereco = preferences.getString(ENDERECO_KEY, "");
                 cpf = preferences.getString(CPF_KEY, "");
+                cep = preferences.getString(CEP_KEY, "");
                 pessoa = preferences.getString(TIPO_KEY, "");
 
                 textViewInformacaoCliente.setText("Nome do cliente: " + nome + "\n" +
                         "Enderço: " + endereco + "\n" +
                         "CPF ou CNPJ: " + cpf + "\n" +
+                        "CEP: " + cep + "\n" +
                         "Tipo de Pessoa: " + pessoa + "\n");
 
                 textViewInformacaoCliente.setVisibility(TextView.VISIBLE);
@@ -165,12 +172,14 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
                         String nome = preferences.getString(NAME_KEY, "");
                         String endereco = preferences.getString(ENDERECO_KEY, "");
                         String cpf = preferences.getString(CPF_KEY, "");
+                        String cep = preferences.getString(CEP_KEY, "");
                         String pessoa = preferences.getString(TIPO_KEY, "");
 
                         String mensagem = "Cliente\n" +
                                 "Nome: " + nome + "\n" +
                                 "Endereço: " + endereco + "\n" +
                                 "CPF ou CNPJ: " + cpf + "\n" +
+                                "CEP: " + cep + "\n" +
                                 "Tipo: " + pessoa + "\n";
 
                         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -210,6 +219,7 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
         String nomeStr = editTextNomeCliente.getText().toString();
         String enderecoStr = editTextEndereco.getText().toString();
         String cpfStr = editTextCpf.getText().toString();
+        String cepStr = editTextCep.getText().toString();
         String tipoStr = spinnerTipo.getSelectedItem().toString();
         if (nomeStr.equals((""))) {
             Toast.makeText(getApplicationContext() , "Campo nome não pode ser vazio" , Toast.LENGTH_SHORT).show();
@@ -229,12 +239,13 @@ public class FormCliente extends AppCompatActivity implements DAOObserver {
 
         ClienteDAO dao = new ClienteDAO(FormCliente.this);
             if(cliente == null) {
-                cliente = new Cliente (null, nomeStr, tipoStr, cpfStr, enderecoStr);
+                cliente = new Cliente (null, nomeStr, tipoStr, cpfStr, cepStr, enderecoStr);
                 dao.save(cliente);
             } else {
                 cliente.setNome(nomeStr);
                 cliente.setTipo(tipoStr);
                 cliente.setCpf(cpfStr);
+                cliente.setCep(cepStr);
                 cliente.setEndereco(enderecoStr);
                 dao.update(cliente);
             }

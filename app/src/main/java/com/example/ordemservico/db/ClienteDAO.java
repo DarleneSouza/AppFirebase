@@ -23,10 +23,11 @@ import java.util.Map;
 public class ClienteDAO {
     private DAOObserver observer;
 
-    private static final String COLLECTION = "tasks";
+    private static final String COLLECTION = "cliente";
     private static final String NOME = "nome";
     private static final String TIPO = "tipo";
     private static final String CPF = "cpf";
+    private static final String CEP = "cep";
     private static final String ENDERECO = "endereco";
     private static final String DT_CHANGE = "date_changed";
 
@@ -51,10 +52,11 @@ public class ClienteDAO {
                         String nome = doc.get(NOME, String.class);
                         String tipo = doc.get(TIPO, String.class);
                         String cpf = doc.get(CPF, String.class);
+                        String cep = doc.get(CEP, String.class);
                         String endereco = doc.get(ENDERECO, String.class);
 
 
-                        Cliente cliente = new Cliente(id, nome, tipo, cpf, endereco);
+                        Cliente cliente = new Cliente(id, nome, tipo, cpf, cep, endereco);
 
                     }
 
@@ -69,6 +71,7 @@ public class ClienteDAO {
         clienteMap.put(NOME, cliente.getNome());
         clienteMap.put(TIPO, cliente.getTipo());
         clienteMap.put(CPF, cliente.getCpf());
+        clienteMap.put(CEP, cliente.getCep());
         clienteMap.put(ENDERECO, cliente.getEndereco());
         clienteMap.put(DT_CHANGE, cliente.getNome());
 
@@ -81,6 +84,7 @@ public class ClienteDAO {
         clienteMap.put(NOME, cliente.getNome());
         clienteMap.put(TIPO, cliente.getTipo());
         clienteMap.put(CPF, cliente.getCpf());
+        clienteMap.put(CEP, cliente.getCep());
         clienteMap.put(ENDERECO, cliente.getEndereco());
         clienteMap.put(DT_CHANGE, cliente.getNome());
 
@@ -107,9 +111,10 @@ public class ClienteDAO {
                         String nome = doc.getString(NOME);
                         String tipo = doc.getString(TIPO);
                         String cpf = doc.getString(CPF);
+                        String cep = doc.getString(CEP);
                         String endereco = doc.getString(ENDERECO);
 
-                        Cliente cliente = new Cliente(id, nome, tipo, cpf, endereco);
+                        Cliente cliente = new Cliente(id, nome, tipo, cpf, cep, endereco);
                         clientes.add(cliente);
                     }
 
